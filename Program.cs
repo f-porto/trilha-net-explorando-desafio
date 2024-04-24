@@ -1,25 +1,37 @@
-﻿using System.Text;
-using DesafioProjetoHospedagem.Models;
+﻿using DesafioProjetoHospedagem.Views;
+using Terminal.Gui;
 
-Console.OutputEncoding = Encoding.UTF8;
+var menu = new MenuBar();
+Window janelaAtual = new NovaReserva
+{
+    Y = Pos.Bottom(menu)
+};
 
-// Cria os modelos de hóspedes e cadastra na lista de hóspedes
-List<Pessoa> hospedes = new List<Pessoa>();
+menu.Menus = new MenuBarItem[] {
+    new("Reserva", new MenuItem[] {
+        new("Nova reserva", "", TrocarJanela<NovaReserva>),
+        new("Finalizar reserva", "", TrocarJanela<FinalizarReserva>),
+        new("Listar reservas", "", TrocarJanela<ListarReservas>),
+    }),
+    new("Suíte", new MenuItem[] {
+        new("Nova suíte", "", TrocarJanela<NovaSuite>),
+        new("Remover suíte", "", TrocarJanela<RemoverSuite>),
+        new("Listar suítes", "", TrocarJanela<ListarReservas>),
+    }),
+    new("Fechar", "", () => Application.RequestStop()),
+};
 
-Pessoa p1 = new Pessoa(nome: "Hóspede 1");
-Pessoa p2 = new Pessoa(nome: "Hóspede 2");
+Application.Init();
+Application.Top.Add(menu, janelaAtual);
+Application.Run();
+Application.Shutdown();
 
-hospedes.Add(p1);
-hospedes.Add(p2);
-
-// Cria a suíte
-Suite suite = new Suite(tipoSuite: "Premium", capacidade: 2, valorDiaria: 30);
-
-// Cria uma nova reserva, passando a suíte e os hóspedes
-Reserva reserva = new Reserva(diasReservados: 5);
-reserva.CadastrarSuite(suite);
-reserva.CadastrarHospedes(hospedes);
-
-// Exibe a quantidade de hóspedes e o valor da diária
-Console.WriteLine($"Hóspedes: {reserva.ObterQuantidadeHospedes()}");
-Console.WriteLine($"Valor diária: {reserva.CalcularValorDiaria()}");
+void TrocarJanela<TWindow>() where TWindow : Window, new()
+{
+    Application.Top.Remove(janelaAtual);
+    janelaAtual = new TWindow
+    {
+        Y = Pos.Bottom(menu)
+    };
+    Application.Top.Add(janelaAtual);
+}
