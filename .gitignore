@@ -5,6 +5,7 @@
 
 .mono
 data/
+log.txt
 
 # User-specific files
 *.rsuser
