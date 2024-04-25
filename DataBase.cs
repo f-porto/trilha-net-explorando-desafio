@@ -110,6 +110,7 @@ public class DataBase
         {
             _reservas.Add(reserva.Id, reserva);
         }
+        Reserva.SetIdCounter(reservas.Count);
     }
 
     public void SaveSuites()
