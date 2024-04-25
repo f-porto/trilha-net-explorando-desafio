@@ -18,4 +18,5 @@ public class Suite
     public int Capacidade { get; set; }
     public decimal ValorDiaria { get; set; }
     public bool Reservado { get; set; }
+    public int IdReserva { get; set; }
 }
