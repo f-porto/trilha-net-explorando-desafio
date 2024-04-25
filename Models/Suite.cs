@@ -10,10 +10,12 @@ public class Suite
         TipoSuite = tipoSuite;
         Capacidade = capacidade;
         ValorDiaria = valorDiaria;
+        Reservado = false;
     }
 
     public string Id { get; init; }
     public string TipoSuite { get; set; }
     public int Capacidade { get; set; }
     public decimal ValorDiaria { get; set; }
+    public bool Reservado { get; set; }
 }
