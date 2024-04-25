@@ -2,17 +2,10 @@ using Terminal.Gui;
 
 namespace DesafioProjetoHospedagem.Views;
 
-class ListarReservas : Window, IDBView
+class ListarReservas : HotelView
 {
-    private DataBase _db;
-
-    public ListarReservas()
+    public override void Init()
     {
         Title = "Reservas";
-    }
-
-    public void SetDataBase(DataBase db)
-    {
-        _db = db;
     }
 }

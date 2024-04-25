@@ -2,17 +2,10 @@ using Terminal.Gui;
 
 namespace DesafioProjetoHospedagem.Views;
 
-public class FinalizarReserva: Window, IDBView
+public class FinalizarReserva : HotelView
 {
-    private DataBase _db;
-
-    public FinalizarReserva()
+    public override void Init()
     {
         Title = "Finalizar Reserva";
-    }
-
-    public void SetDataBase(DataBase db)
-    {
-        _db = db;
     }
 }

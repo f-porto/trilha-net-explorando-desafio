@@ -3,82 +3,70 @@ using Terminal.Gui;
 
 namespace DesafioProjetoHospedagem.Views;
 
-public class NovaSuite : Window, IDBView
+public class NovaSuite : HotelView
 {
-    const string Identificador = "Identificador";
-    const string Tipo = "Tipo";
-    const string Capacidade = "Capacidade";
-    const string ValorDiaria = "Valor da Diária";
-
-    private DataBase _db;
-
-    public NovaSuite()
+    public override void Init()
     {
         Title = "Nova Suíte";
-        var entradas = this.AdicionarEntradas(Identificador, Tipo, Capacidade, ValorDiaria);
+        var (abaixo, direita) = this.AdicionarLabels("Identificador", "Tipo", "Capacidade", "Valor da Diária");
+        var entradaId = new TextField()
+        {
+            Y = 0,
+            X = direita + 1,
+            Width = Dim.Fill(),
+        };
+        var entradaTipo = new TextField()
+        {
+            Y = 2,
+            X = direita + 1,
+            Width = Dim.Fill(),
+        };
+        var entradaCapacidade = new TextField()
+        {
+            Y = 4,
+            X = direita + 1,
+            Width = Dim.Fill(),
+        };
+        var entradaValorDiara = new TextField()
+        {
+            Y = 6,
+            X = direita + 1,
+            Width = Dim.Fill(),
+        };
 
         var botaoSalvar = new Button
         {
             Text = "Salvar",
-            Y = Pos.Bottom(entradas[ValorDiaria]) + 1,
-            X = Pos.Left(entradas[ValorDiaria]),
+            Y = abaixo + 1,
+            X = direita + 1,
         };
         botaoSalvar.Clicked += () =>
         {
-            var id = entradas[Identificador].Text.ToString().Trim().ToUpper();
-            var tipo = entradas[Tipo].Text.ToString().Trim().ToUpper();
-            var capacidade = entradas[Capacidade].Text.ToString().Trim();
-            var valorDiaria = entradas[ValorDiaria].Text.ToString().Trim();
+            var id = entradaId.Text.ToString().Trim().ToUpper();
+            var tipo = entradaTipo.Text.ToString().Trim().ToUpper();
+            var capacidade = entradaCapacidade.Text.ToString().Trim();
+            var valorDiaria = entradaValorDiara.Text.ToString().Trim();
             if (!int.TryParse(capacidade, out int cap))
             {
-                var dialogo = new Dialog("Erro");
-                var texto = new Label($"'{capacidade}' não é um número válido para capacidade");
-                var botao = new Button("Ok");
-                botao.Clicked += () => Remove(dialogo);
-                dialogo.AddButton(botao);
-                dialogo.Add(texto);
-                Add(dialogo);
+                this.CriarDialogo("Erro", $"'{capacidade}' não é um número válido para capacidade");
                 return;
             }
             if (!decimal.TryParse(valorDiaria, out decimal vd))
             {
-                var dialogo = new Dialog("Erro");
-                var texto = new Label($"'{valorDiaria}' não é um número válido para valor da diária");
-                var botao = new Button("Ok");
-                botao.Clicked += () => Remove(dialogo);
-                dialogo.AddButton(botao);
-                dialogo.Add(texto);
-                Add(dialogo);
+                this.CriarDialogo("Erro", $"'{valorDiaria}' não é um número válido para valor da diária");
                 return;
             }
             var suite = new Suite(id, tipo, cap, vd);
             if (!_db.AddSuite(suite))
             {
-                var dialogo = new Dialog("Erro");
-                var texto = new Label($"Suite com identificador '{id}' já existe");
-                var botao = new Button("Ok");
-                botao.Clicked += () => Remove(dialogo);
-                dialogo.AddButton(botao);
-                dialogo.Add(texto);
-                Add(dialogo);
+                this.CriarDialogo("Erro", $"Suite com identificador '{id}' já existe");
             }
             else
             {
-                var dialogo = new Dialog("Sucesso");
-                var texto = new Label($"Suite '{id}' foi adicionada");
-                var botao = new Button("Ok");
-                botao.Clicked += () => Remove(dialogo);
-                dialogo.AddButton(botao);
-                dialogo.Add(texto);
-                Add(dialogo);
+                this.CriarDialogo("Sucesso", $"Suite '{id}' foi adicionada");
             }
         };
 
         Add(botaoSalvar);
-    }
-
-    public void SetDataBase(DataBase db)
-    {
-        _db = db;
     }
 }

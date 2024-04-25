@@ -2,17 +2,10 @@ using Terminal.Gui;
 
 namespace DesafioProjetoHospedagem.Views;
 
-public class RemoverSuite : Window, IDBView
+public class RemoverSuite : HotelView
 {
-    private DataBase _db;
-
-    public RemoverSuite()
+    public override void Init()
     {
         Text = "Remover Suíte";
-    }
-
-    public void SetDataBase(DataBase db)
-    {
-        _db = db;
     }
 }
