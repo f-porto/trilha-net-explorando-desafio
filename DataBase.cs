@@ -6,6 +6,7 @@ namespace DesafioProjetoHospedagem;
 public class DataBase
 {
     private readonly Dictionary<string, Suite> _suites = new();
+    private readonly Dictionary<int, Reserva> _reservas = new();
 
     public DataBase() { }
 
@@ -38,6 +39,35 @@ public class DataBase
         _suites.Remove(id);
     }
 
+    public Reserva GetReservaById(int id)
+    {
+        if (_reservas.ContainsKey(id))
+        {
+            return _reservas[id];
+        }
+        return null;
+    }
+
+    public List<Reserva> GetReservas()
+    {
+        return _reservas.Values.ToList();
+    }
+
+    public bool AddReserva(Reserva reserva)
+    {
+        if (_reservas.ContainsKey(reserva.Id))
+        {
+            return false;
+        }
+        _reservas[reserva.Id] = reserva;
+        return true;
+    }
+
+    public void DeleteReserva(int id)
+    {
+        _reservas.Remove(id);
+    }
+
     public void Init()
     {
         if (!Directory.Exists("./data"))
@@ -48,12 +78,18 @@ public class DataBase
         {
             File.WriteAllText("./data/suites.json", "[]");
         }
+        if (!File.Exists("./data/reservas.json"))
+        {
+            File.WriteAllText("./data/reservas.json", "[]");
+        }
         LoadSuites();
+        LoadReservas();
     }
 
     public void Close()
     {
         SaveSuites();
+        SaveReservas();
     }
 
     public void LoadSuites()
@@ -66,10 +102,27 @@ public class DataBase
         }
     }
 
+    public void LoadReservas()
+    {
+        using var sr = new StreamReader("./data/reservas.json");
+        var reservas = JsonSerializer.Deserialize<List<Reserva>>(sr.BaseStream);
+        foreach (var reserva in reservas)
+        {
+            _reservas.Add(reserva.Id, reserva);
+        }
+    }
+
     public void SaveSuites()
     {
         using var sw = new StreamWriter("./data/suites.json");
         var suites = _suites.Values.ToList();
         JsonSerializer.Serialize(sw.BaseStream, suites);
+    }
+
+    public void SaveReservas()
+    {
+        using var sw = new StreamWriter("./data/reservas.json");
+        var reservas = _reservas.Values.ToList();
+        JsonSerializer.Serialize(sw.BaseStream, reservas);
     }
 }

@@ -32,7 +32,7 @@ Application.Run((Exception e) =>
 });
 Application.Shutdown();
 
-db.SaveSuites();
+db.Close();
 
 void TrocarJanela<TWindow>() where TWindow : HotelView, new()
 {
