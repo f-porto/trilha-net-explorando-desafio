@@ -34,6 +34,16 @@ public class DataBase
         return true;
     }
 
+    public bool UpdateSuite(Suite suite)
+    {
+        if (!_suites.ContainsKey(suite.Id))
+        {
+            return false;
+        }
+        _suites[suite.Id] = suite;
+        return true;
+    }
+
     public void DeleteSuite(string id)
     {
         _suites.Remove(id);
