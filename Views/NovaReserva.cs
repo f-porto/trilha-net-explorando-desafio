@@ -126,6 +126,8 @@ public class NovaReserva : HotelView
             if (_db.AddReserva(reserva))
             {
                 suite.Reservado = true;
+                suite.IdReserva = reserva.Id;
+                _db.UpdateSuite(suite);
                 this.CriarDialogo("Sucesso", "Nova reserva for cadastrada");
             }
             else
