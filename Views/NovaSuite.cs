@@ -11,25 +11,25 @@ public class NovaSuite : HotelView
         var (abaixo, direita) = this.AdicionarLabels("Identificador", "Tipo", "Capacidade", "Valor da Diária");
         var entradaId = new TextField()
         {
-            Y = 0,
+            Y = 1,
             X = direita + 1,
             Width = Dim.Fill(),
         };
         var entradaTipo = new TextField()
         {
-            Y = 2,
+            Y = 3,
             X = direita + 1,
             Width = Dim.Fill(),
         };
         var entradaCapacidade = new TextField()
         {
-            Y = 4,
+            Y = 5,
             X = direita + 1,
             Width = Dim.Fill(),
         };
         var entradaValorDiara = new TextField()
         {
-            Y = 6,
+            Y = 7,
             X = direita + 1,
             Width = Dim.Fill(),
         };
@@ -67,6 +67,6 @@ public class NovaSuite : HotelView
             }
         };
 
-        Add(botaoSalvar);
+        Add(entradaId, entradaTipo, entradaCapacidade, entradaValorDiara, botaoSalvar);
     }
 }
