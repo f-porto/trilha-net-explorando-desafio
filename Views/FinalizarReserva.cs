@@ -72,7 +72,7 @@ public class FinalizarReserva : HotelView
                 labelValorFinal.Text = CalcularValorFinal(reserva.DiasReservados, reserva.Suite.ValorDiaria).ToString();
                 return;
             }
-            var idSuite = entradaIdSuite.Text.ToString().Trim();
+            var idSuite = entradaIdSuite.Text.ToString().Trim().ToUpper();
             var suite = _db.GetSuiteById(idSuite);
             if (suite is null)
             {
