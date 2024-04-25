@@ -4,7 +4,7 @@ namespace DesafioProjetoHospedagem.Models;
 
 public class Reserva
 {
-    private static int _idCounter = 0;
+    public static int IdCounter { get; set; }
 
     public int Id { get; set; }
     public List<Pessoa> Hospedes { get; set; }
@@ -16,10 +16,8 @@ public class Reserva
     public Reserva(int diasReservados)
     {
         DiasReservados = diasReservados;
-        Id = _idCounter++;
+        Id = IdCounter++;
     }
-
-    public static void SetIdCounter(int id) => _idCounter = id;
 
     public void CadastrarHospedes(List<Pessoa> hospedes)
     {

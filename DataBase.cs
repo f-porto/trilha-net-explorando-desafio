@@ -90,7 +90,13 @@ public class DataBase
         }
         if (!File.Exists("./data/reservas.json"))
         {
-            File.WriteAllText("./data/reservas.json", "[]");
+            var data = new ReservaData
+            {
+                IdCounter = 0,
+                Reservas = new(),
+            };
+            var text = JsonSerializer.Serialize(data);
+            File.WriteAllText("./data/reservas.json", text);
         }
         LoadSuites();
         LoadReservas();
@@ -115,12 +121,12 @@ public class DataBase
     public void LoadReservas()
     {
         using var sr = new StreamReader("./data/reservas.json");
-        var reservas = JsonSerializer.Deserialize<List<Reserva>>(sr.BaseStream);
-        foreach (var reserva in reservas)
+        var data = JsonSerializer.Deserialize<ReservaData>(sr.BaseStream);
+        foreach (var reserva in data.Reservas)
         {
             _reservas.Add(reserva.Id, reserva);
         }
-        Reserva.SetIdCounter(reservas.Count);
+        Reserva.IdCounter = data.IdCounter;
     }
 
     public void SaveSuites()
@@ -134,6 +140,17 @@ public class DataBase
     {
         using var sw = new StreamWriter("./data/reservas.json");
         var reservas = _reservas.Values.ToList();
-        JsonSerializer.Serialize(sw.BaseStream, reservas);
+        var data = new ReservaData
+        {
+            IdCounter = Reserva.IdCounter,
+            Reservas = reservas,
+        };
+        JsonSerializer.Serialize(sw.BaseStream, data);
     }
+}
+
+struct ReservaData
+{
+    public int IdCounter { get; set; }
+    public List<Reserva> Reservas { get; set; }
 }
