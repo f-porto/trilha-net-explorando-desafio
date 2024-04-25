@@ -21,6 +21,8 @@ class ListarSuites : HotelView
         tabela.Columns.Add(colunaValor);
         var colunaReservado = new DataColumn("Reservado", typeof(bool));
         tabela.Columns.Add(colunaReservado);
+        var colunaIdReserva = new DataColumn("Id da Reserva", typeof(int));
+        tabela.Columns.Add(colunaIdReserva);
 
         foreach (var suite in _db.GetSuites())
         {
@@ -30,6 +32,7 @@ class ListarSuites : HotelView
             row["Capacidade"] = suite.Capacidade;
             row["Valor da diária"] = suite.ValorDiaria;
             row["Reservado"] = suite.Reservado;
+            row["Id da Reserva"] = suite.IdReserva;
             tabela.Rows.Add(row);
         }
 
