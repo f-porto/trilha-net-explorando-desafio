@@ -18,6 +18,11 @@ public class DataBase
         return null;
     }
 
+    public List<Suite> GetSuites()
+    {
+        return _suites.Values.ToList();
+    }
+
     public bool AddSuite(Suite suite)
     {
         if (_suites.ContainsKey(suite.Id))

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace DesafioProjetoHospedagem.Models;
 
 public class Pessoa
@@ -17,5 +19,6 @@ public class Pessoa
 
     public string Nome { get; set; }
     public string Sobrenome { get; set; }
+    [JsonIgnore]
     public string NomeCompleto => $"{Nome} {Sobrenome}".ToUpper();
 }
