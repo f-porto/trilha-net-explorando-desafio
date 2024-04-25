@@ -4,40 +4,31 @@ namespace DesafioProjetoHospedagem;
 
 public static class Extensions
 {
-    public static Dictionary<string, TextField> AdicionarEntradas(this Window janela, params string[] textos)
+    public static (Pos, Pos) AdicionarLabels(this View view, params string[] textos)
     {
-        var indiceMaior = 0;
-        var maior = 0;
-        var labels = new List<Label>();
-        for (var i = 0; i < textos.Length; ++i)
+        var maiorTamanho = textos.Max(x => x.Length);
+        var y = Pos.Top(view);
+        Label label = null;
+        foreach (var texto in textos.Select(x => (x + ":").PadRight(maiorTamanho)))
         {
-            if (textos[i].Length > maior)
+            label = new Label(texto)
             {
-                maior = textos[i].Length;
-                indiceMaior = i;
-            }
-            labels.Add(new Label(textos[i] + ":"));
-        }
-
-        janela.Add(labels[0]);
-        for (var i = 1; i < labels.Count; ++i)
-        {
-            labels[i].Y = Pos.Bottom(labels[i - 1]) + 1;
-            janela.Add(labels[i]);
-        }
-
-        var itens = new Dictionary<string, TextField>();
-        for (var i = 0; i < labels.Count; ++i)
-        {
-            var entrada = new TextField("")
-            {
-                Y = Pos.Top(labels[i]),
-                X = Pos.Right(labels[indiceMaior]) + 1,
-                Width = Dim.Fill(5),
+                Y = y,
             };
-            janela.Add(entrada);
-            itens.Add(textos[i], entrada);
+            y += 2;
+            view.Add(label);
         }
-        return itens;
+        return (Pos.Bottom(label), Pos.Right(label));
+    }
+
+    public static void CriarDialogo(this View janela, string titulo, string mensagem)
+    {
+        var dialogo = new Dialog(titulo);
+        var texto = new Label(mensagem);
+        var botao = new Button("Ok");
+        botao.Clicked += () => janela.Remove(dialogo);
+        dialogo.AddButton(botao);
+        dialogo.Add(texto);
+        janela.Add(dialogo);
     }
 }
