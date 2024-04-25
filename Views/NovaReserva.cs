@@ -1,3 +1,4 @@
+using DesafioProjetoHospedagem.Models;
 using Terminal.Gui;
 
 namespace DesafioProjetoHospedagem.Views;
@@ -74,10 +75,11 @@ public class NovaReserva : HotelView
             Width = Dim.Fill(),
         };
 
+        Suite suite = null;
         botaoProcurar.Clicked += () =>
         {
             var id = entradaId.Text.ToString().Trim().ToUpper();
-            var suite = _db.GetSuiteById(id);
+            suite = _db.GetSuiteById(id);
             if (suite is null)
             {
                 this.CriarDialogo("Erro", $"Suíte '{id}' não existe");
@@ -89,6 +91,47 @@ public class NovaReserva : HotelView
             AdicionarCamposHospedes(quadroScrollReserva, suite.Capacidade);
             botaoReservar.Y = 2 + suite.Capacidade * 2 - 1;
             scrollReserva.ContentSize = new Size(80, 2 + suite.Capacidade * 2);
+        };
+        botaoReservar.Clicked += () =>
+        {
+            if (suite is null)
+            {
+                this.CriarDialogo("Erro", "Suite não foi selecionada");
+                return;
+            }
+            if (suite.Reservado)
+            {
+                this.CriarDialogo("Erro", $"Suíte '{suite.Id}' já está reservada");
+                return;
+            }
+            var diasTexto = entradaDias.Text.ToString().Trim().ToUpper();
+            if (!int.TryParse(diasTexto, out int dias))
+            {
+                this.CriarDialogo("Erro", $"'{diasTexto}' não é um valor válido");
+                return;
+            }
+            var pessoas = new List<Pessoa>();
+            for (var i = 0; i < _entradasNomes.Count; ++i)
+            {
+                var nome = _entradasNomes[i].Text.ToString().Trim().ToUpper();
+                var sobrenome = _entradasSobrenomes[i].Text.ToString().Trim().ToUpper();
+                var pessoa = new Pessoa(nome, sobrenome);
+                pessoas.Add(pessoa);
+            }
+            var reserva = new Reserva(dias)
+            {
+                Hospedes = pessoas,
+                Suite = suite,
+            };
+            if (_db.AddReserva(reserva))
+            {
+                suite.Reservado = true;
+                this.CriarDialogo("Sucesso", "Nova reserva for cadastrada");
+            }
+            else
+            {
+                this.CriarDialogo("Erro", "Erro ao cadastrar reserva");
+            }
         };
 
         quadroSuite.Add(entradaId, labelTipo, labelCapacidade, labelValorDiaria, botaoProcurar);
@@ -138,7 +181,7 @@ public class NovaReserva : HotelView
             _labelNomes.Add(labelNome);
             _labelNomes.Add(labelSobrenome);
             _entradasNomes.Add(entradaNome);
-            _entradasSobrenomes.Add(entradaNome);
+            _entradasSobrenomes.Add(entradaSobrenome);
         }
     }
 }
