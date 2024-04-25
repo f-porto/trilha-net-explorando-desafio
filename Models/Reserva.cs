@@ -1,51 +1,50 @@
 using DesafioProjetoHospedagem.Exceptions;
 
-namespace DesafioProjetoHospedagem.Models
+namespace DesafioProjetoHospedagem.Models;
+
+public class Reserva
 {
-    public class Reserva
+    public List<Pessoa> Hospedes { get; set; }
+    public Suite Suite { get; set; }
+    public int DiasReservados { get; set; }
+
+    public Reserva() { }
+
+    public Reserva(int diasReservados)
     {
-        public List<Pessoa> Hospedes { get; set; }
-        public Suite Suite { get; set; }
-        public int DiasReservados { get; set; }
+        DiasReservados = diasReservados;
+    }
 
-        public Reserva() { }
-
-        public Reserva(int diasReservados)
+    public void CadastrarHospedes(List<Pessoa> hospedes)
+    {
+        if (hospedes.Count <= Suite.Capacidade)
         {
-            DiasReservados = diasReservados;
+            Hospedes = hospedes;
         }
-
-        public void CadastrarHospedes(List<Pessoa> hospedes)
+        else
         {
-            if (hospedes.Count <= Suite.Capacidade)
-            {
-                Hospedes = hospedes;
-            }
-            else
-            {
-                string msg = $"A quantidade de hóspedes ({hospedes.Count}) supera a capacidade da suíte ({Suite.Capacidade})";
-                throw new MuitoHospedesException(msg);
-            }
+            string msg = $"A quantidade de hóspedes ({hospedes.Count}) supera a capacidade da suíte ({Suite.Capacidade})";
+            throw new MuitoHospedesException(msg);
         }
+    }
 
-        public void CadastrarSuite(Suite suite)
-        {
-            Suite = suite;
-        }
+    public void CadastrarSuite(Suite suite)
+    {
+        Suite = suite;
+    }
 
-        public int ObterQuantidadeHospedes()
-        {
-            return Hospedes.Count;
-        }
+    public int ObterQuantidadeHospedes()
+    {
+        return Hospedes.Count;
+    }
 
-        public decimal CalcularValorDiaria()
+    public decimal CalcularValorDiaria()
+    {
+        decimal valor = DiasReservados * Suite.ValorDiaria;
+        if (DiasReservados >= 10)
         {
-            decimal valor = DiasReservados * Suite.ValorDiaria;
-            if (DiasReservados >= 10)
-            {
-                valor *= 0.9m;
-            }
-            return valor;
+            valor *= 0.9m;
         }
+        return valor;
     }
 }
