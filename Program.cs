@@ -1,5 +1,9 @@
-﻿using DesafioProjetoHospedagem.Views;
+﻿using DesafioProjetoHospedagem;
+using DesafioProjetoHospedagem.Views;
 using Terminal.Gui;
+
+var db = new DataBase();
+db.Init();
 
 var menu = new MenuBar();
 Window janelaAtual = new NovaReserva
@@ -23,15 +27,23 @@ menu.Menus = new MenuBarItem[] {
 
 Application.Init();
 Application.Top.Add(menu, janelaAtual);
-Application.Run();
+Application.Run((Exception e) =>
+{
+    File.WriteAllText("log.txt", e.ToString());
+    return false;
+});
 Application.Shutdown();
 
-void TrocarJanela<TWindow>() where TWindow : Window, new()
+db.SaveSuites();
+
+void TrocarJanela<TWindow>() where TWindow : Window, IDBView, new()
 {
     Application.Top.Remove(janelaAtual);
-    janelaAtual = new TWindow
+    var janela = new TWindow()
     {
         Y = Pos.Bottom(menu)
     };
+    janela.SetDataBase(db);
+    janelaAtual = janela;
     Application.Top.Add(janelaAtual);
 }
